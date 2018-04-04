@@ -44,8 +44,10 @@ sudo apt-get install libgtk-3-dev libappindicator3-dev
 ```
 Build Command
 ```
-go build -o ./tasktray-proxy.exe
+go build -o ./tasktray-proxy main.go
 ```
 
 ### Mac
-TODO
+```
+go build -o ./tasktray-proxy main.go
+```
