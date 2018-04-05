@@ -34,7 +34,7 @@ localPort   = "8989"
 ### Windows(MinGW)
 Build.command
 ```
-go build -o ./tasktray-proxy.exe -ldflags -H=windowsgui main.go
+go build -o ./bin/tasktray-proxy.exe -ldflags -H=windowsgui main.go
 ```
 
 ### Linux
@@ -44,10 +44,10 @@ sudo apt-get install libgtk-3-dev libappindicator3-dev
 ```
 Build Command
 ```
-go build -o ./tasktray-proxy main.go
+go build -o ./bin/tasktray-proxy main.go
 ```
 
 ### Mac
 ```
-go build -o ./tasktray-proxy main.go
+go build -o ./bin/tasktray-proxy main.go
 ```
