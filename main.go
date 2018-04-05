@@ -49,8 +49,7 @@ func onReady() {
 	}
 	systray.AddSeparator()
 	mAutoChange := systray.AddMenuItem("Auto Change", "Auto Change Proxy")
-	mAutoChange.Check()
-	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{},nil, mAutoChange})
+	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{Description: "Auto Change"},nil, mAutoChange})
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
 	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{},nil, mQuit})
@@ -64,6 +63,9 @@ func onReady() {
 	proxy.Start()
 	serverItem[0].menu.Check()
 	changeTitle(serverItem[0].config.Description)
+
+	mAutoChange.Check()
+	mAutoChange.SetTitle("✓Auto Change")
 
 	go func() {
 		t := time.NewTicker(3 * time.Second) // 3秒おきに通知
@@ -95,8 +97,10 @@ func onReady() {
 			case len(cases) - 2:
 				if !mAutoChange.Checked() {
 					mAutoChange.Check()
+					mAutoChange.SetTitle("✓" + serverItem[chosen].config.Description)
 				} else {
 					mAutoChange.Uncheck()
+					mAutoChange.SetTitle(serverItem[chosen].config.Description)
 				}
 			default:
 				if !serverItem[chosen].menu.Checked() {

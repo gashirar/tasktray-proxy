@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os/exec"
 	"strings"
+	"regexp"
+	"runtime"
 )
 
 func WifiName() string {

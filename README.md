@@ -1,11 +1,36 @@
 tasktray-proxy
 ===============
 
-Simple Proxy Server on Tasktray for Windows and Linux (and Mac)
+Simple Proxy Server on Tasktray for Windows and Linux (and Mac)  
+To engineers suffering from corporate proxies.
 
 ## Usage
 
-### Step1 Create config file
+### Step1 Build
+
+#### Windows(MinGW)
+```bash
+go build -o ./bin/tasktray-proxy.exe -ldflags -H=windowsgui main.go
+```
+
+#### Linux
+Require
+```bash
+sudo apt-get install libgtk-3-dev libappindicator3-dev
+```
+
+Build Command
+```bash
+go build -o ./bin/tasktray-proxy main.go
+```
+
+#### Mac
+```bash
+go build -o ./bin/tasktray-proxy main.go
+```
+
+
+### Step2 Create config file
 `config.toml`
 
 ```toml
@@ -26,28 +51,12 @@ localPort   = "8989"
 # ...
 ```
 
-### Step2 Change Proxy Server
+### Step3 Launch
+```bash
+./tasktray-proxy -c ./config.toml
+```
+
+If you do not configure the config file, config.toml in the directory where the binary file exists will be read.
+### Step4 Change Proxy Server
 ![Usage](./image/image.jpg)
 
-## Build
-
-### Windows(MinGW)
-Build.command
-```
-go build -o ./bin/tasktray-proxy.exe -ldflags -H=windowsgui main.go
-```
-
-### Linux
-Require
-```
-sudo apt-get install libgtk-3-dev libappindicator3-dev
-```
-Build Command
-```
-go build -o ./bin/tasktray-proxy main.go
-```
-
-### Mac
-```
-go build -o ./bin/tasktray-proxy main.go
-```
