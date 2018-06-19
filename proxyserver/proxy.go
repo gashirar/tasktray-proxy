@@ -78,6 +78,7 @@ func (p *Proxy) handleHttp(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 	} else {
 		defer conn.Close()
+		defer resp.Body.Close()
 		resp.Write(conn)
 	}
 }
@@ -136,6 +137,7 @@ func (p *AuthProxy) handleHttp(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 	} else {
 		defer conn.Close()
+		defer resp.Body.Close()
 		resp.Write(conn)
 	}
 }
