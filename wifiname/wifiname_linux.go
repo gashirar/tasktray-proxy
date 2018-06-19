@@ -25,6 +25,7 @@ func forOSX() string {
 	cmd := exec.Command(osxCmd, osxArgs)
 
 	stdout, err := cmd.StdoutPipe()
+	defer stdout.Close()
 	if err != nil {
 		return ""
 	}
@@ -56,6 +57,7 @@ func forLinux() string {
 	const linuxArgs = "--raw"
 	cmd := exec.Command(linuxCmd, linuxArgs)
 	stdout, err := cmd.StdoutPipe()
+	defer stdout.Close()
 	if err != nil {
 		return ""
 	}
