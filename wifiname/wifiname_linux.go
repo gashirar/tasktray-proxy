@@ -26,12 +26,12 @@ func forOSX() string {
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	// start the command after having set up the pipe
 	if err := cmd.Start(); err != nil {
-		panic(err)
+		return ""
 	}
 
 	var str string
@@ -57,12 +57,12 @@ func forLinux() string {
 	cmd := exec.Command(linuxCmd, linuxArgs)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	// start the command after having set up the pipe
 	if err := cmd.Start(); err != nil {
-		panic(err)
+		return ""
 	}
 
 	var str string

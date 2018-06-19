@@ -20,12 +20,12 @@ func forWindows() string {
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		panic(err)
+		return ""
 	}
 
 	// start the command after having set up the pipe
 	if err := cmd.Start(); err != nil {
-		panic(err)
+		return ""
 	}
 
 	var str string
