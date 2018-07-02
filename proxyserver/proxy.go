@@ -49,23 +49,21 @@ func (p *Proxy) Shutdown() (err error) {
 }
 
 func (p *Proxy) handleHttps(w http.ResponseWriter, r *http.Request) {
-	dest_conn, err := net.DialTimeout("tcp", r.Host, 10*time.Second)
+	hj, _ := w.(http.Hijacker)
+
+	destConn, err := net.Dial("tcp", r.Host)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusServiceUnavailable)
-		return
+		log.Print(err)
 	}
 	w.WriteHeader(http.StatusOK)
-	hijacker, ok := w.(http.Hijacker)
-	if !ok {
-		http.Error(w, "Hijacking not supported", http.StatusInternalServerError)
-		return
+	if clientConn, _, err := hj.Hijack(); err != nil {
+		destConn.Close()
+		log.Print(err)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		go transfer(destConn, clientConn)
+		go transfer(clientConn, destConn)
 	}
-	client_conn, _, err := hijacker.Hijack()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusServiceUnavailable)
-	}
-	go transfer(dest_conn, client_conn)
-	go transfer(client_conn, dest_conn)
 }
 
 func (p *Proxy) handleHttp(w http.ResponseWriter, r *http.Request) {
