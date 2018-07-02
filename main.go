@@ -68,7 +68,7 @@ func onReady() {
 	mAutoChange.SetTitle("✓Auto Change")
 
 	go func() {
-		t := time.NewTicker(3 * time.Second) // 3秒おきに通知
+		t := time.NewTicker(5 * time.Second) // 3秒おきに通知
 		for {
 			select {
 			case <-t.C:
