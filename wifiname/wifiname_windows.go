@@ -19,7 +19,6 @@ func forWindows() string {
 	cmd := exec.Command(windowsCmd, windowsArgs...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	stdout, err := cmd.StdoutPipe()
-	defer stdout.Close()
 	if err != nil {
 		return ""
 	}
