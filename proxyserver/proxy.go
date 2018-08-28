@@ -49,18 +49,17 @@ func (p *Proxy) Shutdown() (err error) {
 }
 
 func (p *Proxy) handleHttps(w http.ResponseWriter, r *http.Request) {
-	hj, _ := w.(http.Hijacker)
 
 	destConn, err := net.Dial("tcp", r.Host)
 	if err != nil {
 		log.Print(err)
 	}
 	w.WriteHeader(http.StatusOK)
+	hj, _ := w.(http.Hijacker)
 	if clientConn, _, err := hj.Hijack(); err != nil {
 		destConn.Close()
 		log.Print(err)
 	} else {
-		w.WriteHeader(http.StatusOK)
 		go transfer(destConn, clientConn)
 		go transfer(clientConn, destConn)
 	}
