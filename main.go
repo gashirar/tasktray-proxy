@@ -64,8 +64,10 @@ func onReady() {
 	serverItem[0].menu.Check()
 	changeTitle(serverItem[0].config.Description)
 
-	autoSwitch.Check()
-	autoSwitch.SetTitle("✓Auto Switch")
+	if config.AutoSwitch {
+		autoSwitch.Check()
+		autoSwitch.SetTitle("✓Auto Switch")
+	}
 
 	go func() {
 		t := time.NewTicker(5 * time.Second) // 3秒おきに通知

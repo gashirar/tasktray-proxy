@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	AutoSwitch bool
 	PROXY []ProxyConfig
 }
 
