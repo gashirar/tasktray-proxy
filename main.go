@@ -26,7 +26,7 @@ type ServerItem struct {
 }
 
 func main() {
-	strOpt  := flag.String("c", "./config.toml", "help message for s option")
+	strOpt := flag.String("c", "./config.toml", "help message for s option")
 	flag.Parse()
 	fmt.Println("config file : ", *strOpt)
 	config = proxyconfig.GetConfig(*strOpt)
@@ -45,14 +45,14 @@ func onReady() {
 		} else {
 			p = proxyserver.NewProxy(cnf.LocalHost, cnf.LocalPort)
 		}
-		serverItem = append(serverItem, &ServerItem{cnf,p, m})
+		serverItem = append(serverItem, &ServerItem{cnf, p, m})
 	}
 	systray.AddSeparator()
-	mAutoChange := systray.AddMenuItem("Auto Change", "Auto Change Proxy")
-	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{Description: "Auto Change"},nil, mAutoChange})
+	autoSwitch := systray.AddMenuItem("Auto Switch", "Auto Switch Proxy")
+	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{Description: "Auto Change"}, nil, autoSwitch})
 	systray.AddSeparator()
 	mQuit := systray.AddMenuItem("Quit", "Quit the whole app")
-	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{},nil, mQuit})
+	serverItem = append(serverItem, &ServerItem{proxyconfig.ProxyConfig{}, nil, mQuit})
 
 	cases := make([]reflect.SelectCase, len(serverItem))
 	for i, item := range serverItem {
@@ -64,15 +64,15 @@ func onReady() {
 	serverItem[0].menu.Check()
 	changeTitle(serverItem[0].config.Description)
 
-	mAutoChange.Check()
-	mAutoChange.SetTitle("✓Auto Change")
+	autoSwitch.Check()
+	autoSwitch.SetTitle("✓Auto Switch")
 
 	go func() {
 		t := time.NewTicker(5 * time.Second) // 3秒おきに通知
 		for {
 			select {
 			case <-t.C:
-				if !mAutoChange.Checked() {
+				if !autoSwitch.Checked() {
 					continue
 				}
 				name := wifiname.WifiName()
@@ -95,12 +95,12 @@ func onReady() {
 				os.Exit(0)
 				return
 			case len(cases) - 2:
-				if !mAutoChange.Checked() {
-					mAutoChange.Check()
-					mAutoChange.SetTitle("✓" + serverItem[chosen].config.Description)
+				if !autoSwitch.Checked() {
+					autoSwitch.Check()
+					autoSwitch.SetTitle("✓" + serverItem[chosen].config.Description)
 				} else {
-					mAutoChange.Uncheck()
-					mAutoChange.SetTitle(serverItem[chosen].config.Description)
+					autoSwitch.Uncheck()
+					autoSwitch.SetTitle(serverItem[chosen].config.Description)
 				}
 			default:
 				if !serverItem[chosen].menu.Checked() {
