@@ -89,7 +89,6 @@ func (p *Proxy) handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 type AuthProxy struct {
 	*Proxy
 	authHost           string
@@ -149,25 +148,26 @@ func (p *AuthProxy) handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func transfer(destination io.WriteCloser, source io.ReadCloser) {
-	defer destination.Close()
-	defer source.Close()
-	io.Copy(destination, source)
+	defer func() {
+		if destination != nil {
+			destination.Close()
+		}
+	}()
+	defer func() {
+		if source != nil {
+			source.Close()
+		}
+	}()
+	if destination != nil && source != nil {
+		io.Copy(destination, source)
+	}
 }
 
 func NewProxy(host string, port string) *Proxy {
 	p := &Proxy{host: host, port: port}
 
 	p.transport = &http.Transport{
-		Proxy: http.ProxyFromEnvironment,
-		DialContext: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-			DualStack: true,
-		}).DialContext,
-		MaxIdleConns:          100,
-		IdleConnTimeout:       90 * time.Second,
-		TLSHandshakeTimeout:   10 * time.Second,
-		ExpectContinueTimeout: 1 * time.Second,
+		Proxy: nil,
 	}
 
 	p.handler = http.HandlerFunc(p.handleRequest)
