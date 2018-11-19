@@ -34,6 +34,8 @@ go build -o ./bin/tasktray-proxy main.go
 `config.toml`
 
 ```toml
+autoswitch  = true
+
 [[PROXY]]
 description = "Your Proxy Name"
 localHost   = "0.0.0.0"
