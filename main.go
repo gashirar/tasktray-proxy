@@ -1,18 +1,17 @@
 package main
 
 import (
+	"./icon"
+	"./proxyconfig"
+	"./proxyserver"
+	"./wifiname"
+	"flag"
 	"fmt"
+	"github.com/getlantern/systray"
+	"net"
 	"os"
 	"reflect"
 	"time"
-
-	"./icon"
-	"./proxyserver"
-	"./proxyconfig"
-	"./wifiname"
-
-	"github.com/getlantern/systray"
-	"flag"
 )
 
 var (
@@ -78,9 +77,16 @@ func onReady() {
 					continue
 				}
 				name := wifiname.WifiName()
+				ipAddrs := getIpAddresses()
 				for _, item := range serverItem {
 					if name != "" && name == item.config.Wifi {
 						item.menu.ClickedCh <- struct{}{}
+					} else if item.config.Network != "" {
+						for _, ip := range ipAddrs {
+							if isIncluededInCIDR(item.config.Network, ip) {
+								item.menu.ClickedCh <- struct{}{}
+							}
+						}
 					}
 				}
 			}
@@ -138,4 +144,33 @@ func uncheckWithout(serverItem []*ServerItem, index int) {
 			serverItem[i].menu.Uncheck()
 		}
 	}
+}
+
+func getIpAddresses() []string {
+	addrs, err := net.InterfaceAddrs()
+	var ips []string
+	if err != nil {
+		os.Stderr.WriteString("Oops: " + err.Error() + "\n")
+		return ips
+		os.Exit(1)
+	}
+	
+	for _, a := range addrs {
+		if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				ips = append(ips, ipnet.IP.String())
+			}
+		}
+	}
+	return ips
+}
+
+func isIncluededInCIDR(cidr string, ip string) bool {
+	_, cidrNet, err := net.ParseCIDR(cidr)
+	if err != nil {
+		return false
+	}
+	
+	targetIP := net.ParseIP(ip)
+	return cidrNet.Contains(targetIP)
 }

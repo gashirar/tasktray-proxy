@@ -42,6 +42,9 @@ authHost    = "some.company.auth.proxy"
 authPort    = "8686"
 user        = "[YOUR ID]"
 password    = "[YOUR PASSWORD]"
+network     = "Netowork CIDR"
+# wifi      = "Network SSID"
+# The "wifi" overrides the "network" if both are used.
 
 [[PROXY]]
 description = "Your Proxy Name 2"

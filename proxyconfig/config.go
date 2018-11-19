@@ -18,6 +18,7 @@ type ProxyConfig struct {
 	LocalHost   string
 	LocalPort   string
 	Wifi        string
+	Network     string
 	Description string
 }
 
