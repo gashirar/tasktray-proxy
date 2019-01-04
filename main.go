@@ -1,13 +1,14 @@
 package main
 
 import (
-	"./icon"
-	"./proxyconfig"
-	"./proxyserver"
-	"./wifiname"
 	"flag"
 	"fmt"
+	"github.com/gashirar/tasktray-proxy/icon"
+	"github.com/gashirar/tasktray-proxy/proxyconfig"
+	"github.com/gashirar/tasktray-proxy/proxyserver"
+	"github.com/gashirar/tasktray-proxy/wifiname"
 	"github.com/getlantern/systray"
+	"log"
 	"net"
 	"os"
 	"reflect"
@@ -28,7 +29,11 @@ func main() {
 	strOpt := flag.String("c", "./config.toml", "help message for s option")
 	flag.Parse()
 	fmt.Println("config file : ", *strOpt)
-	config = proxyconfig.GetConfig(*strOpt)
+	var err error
+	config, err = proxyconfig.GetConfig(*strOpt)
+	if err != nil {
+		log.Fatal(err)
+	}
 	systray.Run(onReady, onExit)
 }
 
@@ -154,7 +159,7 @@ func getIpAddresses() []string {
 		return ips
 		os.Exit(1)
 	}
-	
+
 	for _, a := range addrs {
 		if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
@@ -170,7 +175,7 @@ func isIncluededInCIDR(cidr string, ip string) bool {
 	if err != nil {
 		return false
 	}
-	
+
 	targetIP := net.ParseIP(ip)
 	return cidrNet.Contains(targetIP)
 }

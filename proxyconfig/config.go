@@ -2,7 +2,6 @@ package proxyconfig
 
 import (
 	"github.com/BurntSushi/toml"
-	"log"
 )
 
 type Config struct {
@@ -22,11 +21,11 @@ type ProxyConfig struct {
 	Description string
 }
 
-func GetConfig(file string) *Config {
+func GetConfig(file string) (*Config, error) {
 	var config Config
 	_, err := toml.DecodeFile(file, &config)
 	if err != nil {
-		log.Print(err)
+		return nil, err
 	}
-	return &config
+	return &config, nil
 }
