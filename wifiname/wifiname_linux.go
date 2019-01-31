@@ -34,6 +34,10 @@ func forOSX() string {
 		return ""
 	}
 
+	if err := cmd.Wait(); err != nil {
+		return ""
+	}
+
 	var str string
 
 	if b, err := ioutil.ReadAll(stdout); err == nil {
@@ -62,6 +66,10 @@ func forLinux() string {
 
 	// start the command after having set up the pipe
 	if err := cmd.Start(); err != nil {
+		return ""
+	}
+
+	if err := cmd.Wait(); err != nil {
 		return ""
 	}
 
