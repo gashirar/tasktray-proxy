@@ -28,6 +28,10 @@ func forWindows() string {
 		return ""
 	}
 
+    if err := cmd.Wait(); err != nil {
+        return ""
+    }
+
 	var str string
 
 	if b, err := ioutil.ReadAll(stdout); err == nil {
