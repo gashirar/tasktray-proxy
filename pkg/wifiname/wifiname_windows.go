@@ -28,9 +28,9 @@ func forWindows() string {
 		return ""
 	}
 
-    if err := cmd.Wait(); err != nil {
-        return ""
-    }
+	if err := cmd.Wait(); err != nil {
+		return ""
+	}
 
 	var str string
 
@@ -47,4 +47,3 @@ func forWindows() string {
 
 	return result[1]
 }
-
